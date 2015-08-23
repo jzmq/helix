@@ -59,6 +59,32 @@ public class ResourceStateSpec {
     return instanceSpecs;
   }
 
+//  public List<ResourceStateTableRow> getResourceStateTable() {
+//    List<ResourceStateTableRow> resourceStateTable = new ArrayList<ResourceStateTableRow>();
+//    Set<String> partitionNames = idealState.getPartitionSet();
+//    for (String partitionName : partitionNames) {
+//      Map<String, String> stateMap = idealState.getInstanceStateMap(partitionName);
+//      if (stateMap != null) {
+//        for (Map.Entry<String, String> entry : stateMap.entrySet()) {
+//          String instanceName = entry.getKey();
+//          String ideal = entry.getValue();
+//
+//          String external = null;
+//          if (externalView != null) {
+//            Map<String, String> externalStateMap = externalView.getStateMap(partitionName);
+//            if (externalStateMap != null) {
+//              external = externalStateMap.get(instanceName);
+//            }
+//          }
+//
+//          resourceStateTable.add(new ResourceStateTableRow(resource, partitionName, instanceName, ideal, external));
+//        }
+//      }
+//    }
+//
+//    return resourceStateTable;
+//  }
+
   public List<ResourceStateTableRow> getResourceStateTable() {
     List<ResourceStateTableRow> resourceStateTable = new ArrayList<ResourceStateTableRow>();
     Set<String> partitionNames = idealState.getPartitionSet();
@@ -66,18 +92,20 @@ public class ResourceStateSpec {
       Map<String, String> stateMap = idealState.getInstanceStateMap(partitionName);
       if (stateMap != null) {
         for (Map.Entry<String, String> entry : stateMap.entrySet()) {
-          String instanceName = entry.getKey();
+//          String instanceName = entry.getKey();
           String ideal = entry.getValue();
 
           String external = null;
           if (externalView != null) {
             Map<String, String> externalStateMap = externalView.getStateMap(partitionName);
             if (externalStateMap != null) {
-              external = externalStateMap.get(instanceName);
+//              external = externalStateMap.get(instanceName);
+              for (Map.Entry<String,String> entry1:externalStateMap.entrySet()){
+                resourceStateTable.add(new ResourceStateTableRow(resource, partitionName, entry1.getKey(), ideal, entry1.getValue()));
+              }
             }
           }
-
-          resourceStateTable.add(new ResourceStateTableRow(resource, partitionName, instanceName, ideal, external));
+//          resourceStateTable.add(new ResourceStateTableRow(resource, partitionName, instanceName, ideal, external));
         }
       }
     }
