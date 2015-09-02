@@ -587,6 +587,25 @@ public class ZKHelixAdmin implements HelixAdmin {
   }
 
   @Override
+  public List<String> getLiveInstancesInClusterWithTag(String clusterName, String tag) {
+    String liveInstancesPath = HelixUtil.getLiveInstancesPath(clusterName);
+    List<String> instances = _zkClient.getChildren(liveInstancesPath);
+    List<String> result = new ArrayList<String>();
+
+    HelixDataAccessor accessor =
+            new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor<ZNRecord>(_zkClient));
+    Builder keyBuilder = accessor.keyBuilder();
+
+    for (String instanceName : instances) {
+      InstanceConfig config = accessor.getProperty(keyBuilder.instanceConfig(instanceName));
+      if (config.containsTag(tag)) {
+        result.add(instanceName);
+      }
+    }
+    return result;
+  }
+
+  @Override
   public void addResource(String clusterName, String resourceName, int partitions,
       String stateModelRef) {
     addResource(clusterName, resourceName, partitions, stateModelRef,

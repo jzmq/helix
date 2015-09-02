@@ -378,6 +378,8 @@ public interface HelixAdmin {
    */
   List<String> getInstancesInClusterWithTag(String clusterName, String tag);
 
+  List<String> getLiveInstancesInClusterWithTag(String clusterName, String tag);
+
   /**
    * @param clusterName
    * @param instanceNames
